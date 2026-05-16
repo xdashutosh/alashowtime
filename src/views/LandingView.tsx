@@ -10,16 +10,37 @@ interface LandingViewProps {
 export const LandingView: React.FC<LandingViewProps> = ({ onBookTickets, onOpenDetailsModal }) => {
   return (
     <div className="flex-1 flex flex-col relative w-full overflow-hidden bg-black">
-      {/* Background Hero Image */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* Background Hero Image & Sky Projector Animations */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-[#0c0505]">
+        {/* Sky Projector Razor-Sharp Laser Rays coming from behind */}
+        <div className="absolute inset-x-0 bottom-0 top-0 overflow-hidden pointer-events-none z-0 flex justify-center items-end">
+          {/* Central Ground Projector Glow */}
+          <div className="absolute bottom-0 w-[400px] md:w-[800px] h-[350px] bg-gradient-to-t from-amber-500/40 via-red-600/10 to-transparent blur-3xl animate-pulse opacity-80 mix-blend-screen" />
+
+          {/* Razor Sharp Laser 1 (Golden Amber) */}
+          <div className="absolute bottom-0 w-1.5 md:w-2.5 h-[170%] bg-gradient-to-t from-white via-amber-400 to-transparent shadow-[0_0_25px_#f59e0b] blur-[0.5px] animate-laser-1 opacity-95 mix-blend-screen" />
+          
+          {/* Razor Sharp Laser 2 (Ruby Red) */}
+          <div className="absolute bottom-0 w-1.5 md:w-2 h-[160%] bg-gradient-to-t from-white via-red-500 to-transparent shadow-[0_0_25px_#ef4444] blur-[0.5px] animate-laser-2 opacity-95 mix-blend-screen ml-12 md:ml-24" />
+          
+          {/* Razor Sharp Laser 3 (Electric Blue) */}
+          <div className="absolute bottom-0 w-1.5 md:w-2.5 h-[180%] bg-gradient-to-t from-white via-blue-400 to-transparent shadow-[0_0_25px_#3b82f6] blur-[0.5px] animate-laser-3 opacity-95 mix-blend-screen mr-16 md:mr-32" />
+
+          {/* Razor Sharp Laser 4 (Emerald Green) */}
+          <div className="absolute bottom-0 w-1.5 md:w-2 h-[165%] bg-gradient-to-t from-white via-emerald-400 to-transparent shadow-[0_0_25px_#10b981] blur-[0.5px] animate-laser-1 opacity-90 mix-blend-screen ml-32 md:ml-64" style={{ animationDelay: '-3s' }} />
+
+          {/* Razor Sharp Laser 5 (Royal Purple) */}
+          <div className="absolute bottom-0 w-1.5 md:w-2 h-[175%] bg-gradient-to-t from-white via-purple-400 to-transparent shadow-[0_0_25px_#a855f7] blur-[0.5px] animate-laser-2 opacity-90 mix-blend-screen mr-32 md:mr-64" style={{ animationDelay: '-6s' }} />
+        </div>
+
         <img 
           src="/assam-hero-bg.png" 
           alt="Assam Legislative Assembly Light Show" 
-          className="absolute inset-0 w-full h-full object-cover object-right md:object-center transform scale-105 filter brightness-95 contrast-105"
+          className="absolute inset-0 w-full h-full object-cover object-right md:object-center transform scale-105 filter brightness-95 contrast-105 z-10 opacity-90 mix-blend-lighten"
         />
         {/* Dark gradient overlay to ensure text readability on left */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0505] via-[#0c0505]/80 to-transparent w-full md:w-2/3 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0505] via-transparent to-transparent z-10 opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0505] via-[#0c0505]/80 to-transparent w-full md:w-2/3 z-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0505] via-transparent to-transparent z-20 opacity-90 pointer-events-none" />
       </div>
 
       {/* Main Content Area */}
