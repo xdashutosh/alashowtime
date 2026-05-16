@@ -17,21 +17,20 @@ export const SidebarPoster: React.FC<SidebarPosterProps> = ({ bookingState, curr
         <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-transparent to-red-600/10 opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {/* Poster Image */}
-        <div className="relative w-full pb-[110%] overflow-hidden bg-black">
+        <div className="relative w-full pb-[60%] sm:pb-[75%] lg:pb-[110%] overflow-hidden bg-black">
           <img 
             src="/assam-poster.png" 
             alt="Assam The Saga of Glory" 
-            className="absolute inset-0 w-full h-full object-cover object-top filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
+            className="absolute inset-0 w-full h-full object-cover object-center lg:object-top filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
             onError={(e) => {
-              // Fallback to hero bg if poster is missing
               e.currentTarget.src = '/assam-hero-bg.png';
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#180a0a] via-transparent to-transparent opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#180a0a] via-[#180a0a]/40 lg:via-transparent to-transparent opacity-95" />
         </div>
 
         {/* Text Details underneath */}
-        <div className="p-6 relative z-10 -mt-20 space-y-4 text-center">
+        <div className="p-4 sm:p-6 relative z-10 -mt-16 sm:-mt-20 space-y-3 sm:space-y-4 text-center">
           <div className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full text-amber-300 text-xs uppercase tracking-widest font-semibold backdrop-blur-md mb-2">
             Immersive 3D Projection & Light Show
           </div>

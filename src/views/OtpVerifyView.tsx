@@ -172,18 +172,18 @@ export const OtpVerifyView: React.FC<OtpVerifyProps> = ({
             </div>
 
             {/* Timer & Resend */}
-            <div className="flex items-center justify-between text-xs font-semibold px-2">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold px-2 text-center">
               <div className="flex items-center space-x-1.5 text-amber-400">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 shrink-0" />
                 <span>OTP will expire in {formatTime(timeLeft)}</span>
               </div>
               <button
                 type="button"
                 onClick={handleResend}
                 disabled={timeLeft > 150}
-                className="text-amber-400 hover:text-amber-300 hover:underline disabled:opacity-40 disabled:hover:no-underline transition flex items-center space-x-1"
+                className="text-amber-400 hover:text-amber-300 hover:underline disabled:opacity-40 disabled:hover:no-underline transition flex items-center space-x-1 cursor-pointer"
               >
-                <RefreshCw className="w-3 h-3" />
+                <RefreshCw className="w-3 h-3 shrink-0" />
                 <span>Didn't receive OTP? Resend OTP</span>
               </button>
             </div>

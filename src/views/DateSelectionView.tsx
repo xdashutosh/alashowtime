@@ -195,20 +195,20 @@ export const DateSelectionView: React.FC<DateSelectionProps> = ({
         </div>
 
         {/* Buttons bottom */}
-        <div className="flex items-center justify-between pt-6 mt-4 border-t border-[#381818]">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 mt-4 border-t border-[#381818]">
           <button 
             onClick={onBack}
-            className="px-8 py-3.5 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center space-x-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center justify-center space-x-2 cursor-pointer"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4 shrink-0" />
             <span>BACK</span>
           </button>
           <button 
             onClick={onNext}
-            className="px-10 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-bold text-base tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center space-x-2"
+            className="w-full sm:w-auto px-10 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-bold text-base tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>CHECK AVAILABILITY</span>
-            <ChevronRight className="w-5 h-5 text-black" />
+            <ChevronRight className="w-5 h-5 text-black shrink-0" />
           </button>
         </div>
       </motion.div>

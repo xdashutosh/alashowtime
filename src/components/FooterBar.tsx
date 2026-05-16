@@ -36,24 +36,24 @@ export const FooterBar: React.FC<FooterBarProps> = ({ currentStep }) => {
 
         {/* Right Info / Socials */}
         {isFinal ? (
-          <div className="flex items-center space-x-8">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:space-x-8">
             <div className="flex items-center space-x-3">
-              <Mail className="w-5 h-5 text-amber-500" />
+              <Mail className="w-5 h-5 text-amber-500 shrink-0" />
               <div>
                 <p className="font-semibold text-amber-400">Write to us</p>
                 <p className="text-xs text-gray-400">support@assamglory.com</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Follow us:</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider shrink-0">Follow us:</span>
               <div className="flex space-x-2">
-                <a href="#web" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300" title="Website">
+                <a href="#web" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300 shrink-0" title="Website">
                   <Globe className="w-4 h-4" />
                 </a>
-                <a href="#share" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300" title="Share">
+                <a href="#share" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300 shrink-0" title="Share">
                   <Share2 className="w-4 h-4" />
                 </a>
-                <a href="#chat" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300" title="Community">
+                <a href="#chat" className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500 hover:text-black transition-all duration-300 shrink-0" title="Community">
                   <MessageCircle className="w-4 h-4" />
                 </a>
               </div>

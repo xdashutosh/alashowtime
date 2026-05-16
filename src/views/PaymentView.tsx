@@ -246,22 +246,22 @@ export const PaymentView: React.FC<PaymentViewProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
           <button 
             type="button"
             onClick={onBack}
-            className="px-8 py-4 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center space-x-2"
+            className="w-full sm:w-auto px-8 py-4 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center justify-center space-x-2 cursor-pointer"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4 shrink-0" />
             <span>BACK</span>
           </button>
           <motion.button 
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onPay}
-            className="px-12 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-black text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:brightness-110 transition duration-300 flex items-center space-x-3 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-black text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:brightness-110 transition duration-300 flex items-center justify-center space-x-3 cursor-pointer"
           >
-            <Lock className="w-5 h-5 text-black" />
+            <Lock className="w-5 h-5 text-black shrink-0" />
             <span>PAY ₹ {grandTotal.toFixed(2)}</span>
           </motion.button>
         </div>

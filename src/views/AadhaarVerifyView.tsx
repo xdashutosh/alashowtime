@@ -103,21 +103,21 @@ export const AadhaarVerifyView: React.FC<AadhaarVerifyProps> = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center space-x-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
             <button 
               type="button"
               onClick={onBack}
-              className="w-1/3 py-4 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center justify-center space-x-1"
+              className="w-full sm:w-1/3 py-4 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center justify-center space-x-1 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>BACK</span>
             </button>
             <button 
               type="submit"
-              className="flex-1 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-black text-lg tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center justify-center space-x-2"
+              className="w-full sm:flex-1 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-black text-lg tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>SEND OTP</span>
-              <ChevronRight className="w-5 h-5 text-black" />
+              <ChevronRight className="w-5 h-5 text-black shrink-0" />
             </button>
           </div>
         </form>

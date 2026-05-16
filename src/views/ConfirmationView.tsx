@@ -212,23 +212,23 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
             BOOK ANOTHER TICKET
           </button>
           
-          <div className="flex items-center space-x-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full sm:w-auto">
             <button 
               onClick={onGoHome}
-              className="flex-1 sm:flex-none px-6 py-4 rounded-xl bg-black border border-[#4a2020] text-gray-300 font-semibold hover:text-white transition flex items-center justify-center space-x-2 text-sm"
+              className="w-full sm:w-auto px-6 py-4 rounded-xl bg-black border border-[#4a2020] text-gray-300 font-semibold hover:text-white transition flex items-center justify-center space-x-2 text-sm cursor-pointer"
             >
-              <Home className="w-4 h-4 text-amber-500" />
+              <Home className="w-4 h-4 text-amber-500 shrink-0" />
               <span>HOME</span>
             </button>
 
             <motion.button 
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onViewFinalDashboard}
-              className="flex-1 sm:flex-none px-8 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-bold text-sm tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black font-cinzel font-bold text-sm tracking-widest uppercase shadow-xl hover:brightness-110 shadow-amber-500/20 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>VIEW DASHBOARD</span>
-              <ArrowRight className="w-4 h-4 text-black" />
+              <ArrowRight className="w-4 h-4 text-black shrink-0" />
             </motion.button>
           </div>
         </div>

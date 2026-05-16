@@ -109,7 +109,7 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
               <div key={row} className="flex items-center justify-between space-x-3">
                 <span className="font-mono text-xs font-bold text-amber-500 w-6 text-center">{row}</span>
                 
-                <div className="flex-1 grid grid-cols-18 gap-1.5">
+                <div className="flex-1 grid grid-cols-[repeat(18,minmax(0,1fr))] gap-1 sm:gap-1.5">
                   {Array.from({ length: cols }, (_, i) => i + 1).map((col) => {
                     const seatId = `${row}-${col}`;
                     const isBooked = bookedSeatsStr.includes(seatId);
@@ -120,7 +120,7 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
                         key={seatId}
                         disabled={isBooked}
                         onClick={() => handleSeatClick(seatId)}
-                        className={`h-8 rounded-md font-mono text-[11px] font-bold flex items-center justify-center transition-all duration-200 ${
+                        className={`h-7 sm:h-8 rounded-md font-mono text-[10px] sm:text-[11px] font-bold flex items-center justify-center transition-all duration-200 ${
                           isSelected
                             ? 'bg-gradient-to-r from-amber-400 to-amber-600 text-black font-extrabold scale-110 shadow-md shadow-amber-500/50 ring-2 ring-white/50 z-10'
                             : isBooked
@@ -141,13 +141,13 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
         </div>
 
         {/* Bottom controls breakdown & Summary panel */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 pt-6 border-t border-[#381818] items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-6 border-t border-[#381818] items-center">
           {/* Selected Chips */}
-          <div className="xl:col-span-4 flex flex-col space-y-2">
+          <div className="flex flex-col space-y-2 text-left">
             <span className="text-xs uppercase text-gray-400 font-semibold tracking-wider">
               Selected Seats ({selectedSeats.length})
             </span>
-            <div className="flex flex-wrap gap-2 min-h-[40px] items-center">
+            <div className="flex flex-wrap gap-1.5 min-h-[40px] items-center">
               {selectedSeats.length === 0 ? (
                 <span className="text-xs text-gray-500 italic">No seats selected yet</span>
               ) : (
@@ -155,7 +155,7 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
                   <span
                     key={sid}
                     onClick={() => handleSeatClick(sid)}
-                    className="px-3 py-1 bg-amber-500/20 border border-amber-500/60 rounded-full text-amber-300 font-mono text-xs font-bold flex items-center space-x-1 cursor-pointer hover:bg-amber-500/30 transition group"
+                    className="px-2.5 py-1 bg-amber-500/20 border border-amber-500/60 rounded-full text-amber-300 font-mono text-xs font-bold flex items-center space-x-1 cursor-pointer hover:bg-amber-500/30 transition group shrink-0"
                   >
                     <span>{sid}</span>
                     <X className="w-3.5 h-3.5 text-amber-400 group-hover:text-red-400" />
@@ -166,13 +166,13 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
           </div>
 
           {/* Ticket Counter */}
-          <div className="xl:col-span-4 flex flex-col items-center justify-center space-y-2 border-y xl:border-y-0 xl:border-x border-[#381818] py-4 xl:py-0">
+          <div className="flex flex-col items-center justify-center space-y-2 border-y lg:border-y-0 lg:border-x border-[#381818] py-4 lg:py-0">
             <span className="text-xs uppercase text-gray-400 font-semibold tracking-wider">Tickets Selected</span>
             <div className="flex items-center space-x-4">
               <button 
                 onClick={handleDecrement}
                 disabled={selectedSeats.length === 0}
-                className="w-10 h-10 rounded-xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-amber-400 hover:bg-amber-500/20 disabled:opacity-30 transition"
+                className="w-10 h-10 rounded-xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-amber-400 hover:bg-amber-500/20 disabled:opacity-30 transition cursor-pointer"
               >
                 <Minus className="w-5 h-5" />
               </button>
@@ -182,7 +182,7 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
               <button 
                 onClick={handleIncrement}
                 disabled={selectedSeats.length >= 4}
-                className="w-10 h-10 rounded-xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-amber-400 hover:bg-amber-500/20 disabled:opacity-30 transition"
+                className="w-10 h-10 rounded-xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-amber-400 hover:bg-amber-500/20 disabled:opacity-30 transition cursor-pointer"
               >
                 <Plus className="w-5 h-5" />
               </button>
@@ -191,7 +191,7 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
           </div>
 
           {/* Total Amount */}
-          <div className="xl:col-span-4 flex flex-col xl:items-end space-y-1">
+          <div className="flex flex-col lg:items-end space-y-1 text-center lg:text-right">
             <span className="text-xs uppercase text-gray-400 font-semibold tracking-wider">Total Amount</span>
             <span className="font-mono text-3xl font-black text-amber-400">
               ₹ {(selectedSeats.length * ticketPrice).toFixed(2)}
@@ -203,16 +203,16 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
         </div>
 
         {/* Verification Alert Banner */}
-        <div className="bg-amber-500/10 p-4 rounded-xl border border-amber-500/30 flex items-center space-x-3 text-xs text-amber-200">
+        <div className="bg-amber-500/10 p-4 rounded-xl border border-amber-500/30 flex items-center space-x-3 text-xs text-amber-200 text-left">
           <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0" />
           <span>Aadhaar verification required in next step. Ensure you have your 12-digit Aadhaar number ready.</span>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#381818]">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-[#381818]">
           <button 
             onClick={onBack}
-            className="px-8 py-3.5 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center space-x-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-amber-500/50 text-amber-400 font-semibold hover:bg-amber-500/10 transition tracking-wider text-sm uppercase flex items-center justify-center space-x-2 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>BACK</span>
@@ -220,14 +220,14 @@ export const SeatSelectionView: React.FC<SeatSelectionProps> = ({
           <button 
             onClick={onNext}
             disabled={selectedSeats.length === 0}
-            className={`px-10 py-3.5 rounded-xl font-cinzel font-bold text-base tracking-widest uppercase shadow-xl transition duration-300 flex items-center space-x-2 ${
+            className={`w-full sm:w-auto px-10 py-3.5 rounded-xl font-cinzel font-bold text-base tracking-widest uppercase shadow-xl transition duration-300 flex items-center justify-center space-x-2 ${
               selectedSeats.length > 0 
                 ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-black hover:brightness-110 shadow-amber-500/20 cursor-pointer' 
                 : 'bg-gray-700 text-gray-400 opacity-50 cursor-not-allowed'
             }`}
           >
             <span>PROCEED TO VERIFY</span>
-            <ChevronRight className="w-5 h-5 text-black" />
+            <ChevronRight className="w-5 h-5 text-black shrink-0" />
           </button>
         </div>
       </motion.div>

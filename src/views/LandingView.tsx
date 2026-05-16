@@ -53,7 +53,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onBookTickets, onOpenD
           </p>
 
           {/* 3 Info Badges Row */}
-          <div className="grid grid-cols-3 gap-4 pt-4 pb-6 max-w-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 pt-4 pb-6 w-full max-w-lg">
             <div className="flex items-center space-x-3 bg-[#1a0808]/80 p-3 rounded-xl border border-amber-500/30 backdrop-blur-md">
               <div className="p-2.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">
                 <Award className="w-5 h-5" />
