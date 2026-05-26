@@ -1,6 +1,8 @@
 import React from 'react';
 import { Ticket, ShieldCheck, User, Clock, Award, Calendar, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import heroImageDesktop from '../assets/Pic 01.png';
+import heroImageMobile from '../assets/pic 04.png';
 
 interface LandingViewProps {
   onBookTickets: () => void;
@@ -45,8 +47,19 @@ export const LandingView: React.FC<LandingViewProps> = ({ onBookTickets, onOpenD
     <div className="flex-1 flex flex-col relative w-full overflow-hidden bg-black">
       {/* Background Hero Image & Sky Projector Animations */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-[#0c0505]">
+        <img 
+          src={heroImageDesktop} 
+          alt="Assam Legislative Assembly Light Show" 
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-right md:object-center transform scale-105 filter brightness-95 contrast-105 z-0 opacity-90"
+        />
+        <img 
+          src={heroImageMobile} 
+          alt="Assam Legislative Assembly Light Show" 
+          className="block md:hidden absolute inset-0 w-full h-full object-cover object-right transform scale-105 filter brightness-95 contrast-105 z-0 opacity-90"
+        />
+
         {/* Sky Projector Razor-Sharp Laser Rays coming from behind */}
-        <div className="absolute inset-x-0 bottom-0 top-0 overflow-hidden pointer-events-none z-0 flex justify-center items-end">
+        <div className="absolute inset-x-0 bottom-0 top-0 overflow-hidden pointer-events-none z-10 flex justify-center items-end">
           {/* Central Ground Projector Glow */}
           <div className="absolute bottom-0 w-[400px] md:w-[800px] h-[350px] bg-gradient-to-t from-amber-500/40 via-red-600/10 to-transparent blur-3xl animate-pulse opacity-80 mix-blend-screen" />
 
@@ -59,12 +72,6 @@ export const LandingView: React.FC<LandingViewProps> = ({ onBookTickets, onOpenD
             />
           ))}
         </div>
-
-        <img 
-          src="/assam-hero-bg.png" 
-          alt="Assam Legislative Assembly Light Show" 
-          className="absolute inset-0 w-full h-full object-cover object-right md:object-center transform scale-105 filter brightness-95 contrast-105 z-10 opacity-90 mix-blend-lighten"
-        />
         {/* Dark gradient overlay to ensure text readability on left */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b0e17] via-[#0b0e17]/85 to-transparent w-full md:w-2/3 z-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0e17] via-transparent to-transparent z-20 opacity-90 pointer-events-none" />

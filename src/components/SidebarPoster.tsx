@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, MapPin, Award } from 'lucide-react';
 import type { BookingState, Step } from '../types';
+import sidebarImage from '../assets/pic 04.png';
 
 interface SidebarPosterProps {
   bookingState: BookingState;
@@ -19,12 +20,9 @@ export const SidebarPoster: React.FC<SidebarPosterProps> = ({ bookingState, curr
         {/* Poster Image */}
         <div className="relative w-full pb-[60%] sm:pb-[75%] lg:pb-[110%] overflow-hidden bg-black">
           <img 
-            src="/assam-poster.png" 
+            src={sidebarImage} 
             alt="Assam The Saga of Glory" 
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-top filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
-            onError={(e) => {
-              e.currentTarget.src = '/assam-hero-bg.png';
-            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f121b] via-[#0f121b]/40 lg:via-transparent to-transparent opacity-95" />
         </div>

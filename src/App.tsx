@@ -11,27 +11,52 @@ import { TermsView } from './views/TermsView';
 import { DateSelectionView } from './views/DateSelectionView';
 import { SeatSelectionView } from './views/SeatSelectionView';
 import { AadhaarVerifyView } from './views/AadhaarVerifyView';
+import { ContactDetailsView } from './views/ContactDetailsView';
 import { OtpVerifyView } from './views/OtpVerifyView';
 import { PaymentView } from './views/PaymentView';
 import { ConfirmationView } from './views/ConfirmationView';
 import { FinalDashboardView } from './views/FinalDashboardView';
 
 export const App: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<Step>('landing');
+  const [currentStep, setCurrentStep] = useState<Step>(() => {
+    const saved = localStorage.getItem('bookingStep');
+    return (saved as Step) || 'landing';
+  });
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
 
-  const [bookingState, setBookingState] = useState<BookingState>({
-    selectedDate: '15 May 2025',
-    selectedTime: '7:00 PM',
-    selectedSeats: ['C-6', 'C-7'], // Default pre-selected 2 seats
-    aadhaarNumber: '',
-    mobileNumber: '9876543210',
-    otp: '',
-    paymentMethod: 'upi',
-    bookingId: 'ASAM250515000123',
-    totalAmount: 210.00,
+  const [bookingState, setBookingState] = useState<BookingState>(() => {
+    const saved = localStorage.getItem('bookingState');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Error parsing saved state', e);
+      }
+    }
+    return {
+      selectedDate: '15 May 2025',
+      selectedTime: '7:00 PM',
+      selectedSeats: ['C-6', 'C-7'], // Default pre-selected 2 seats
+      aadhaarNumber: '',
+      aadhaarFrontImage: null,
+      aadhaarBackImage: null,
+      email: '',
+      mobileNumber: '',
+      otp: '',
+      paymentMethod: 'upi',
+      bookingId: 'ASAM250515000123',
+      totalAmount: 210.00,
+    };
   });
+
+  React.useEffect(() => {
+    localStorage.setItem('bookingStep', currentStep);
+  }, [currentStep]);
+
+  React.useEffect(() => {
+    localStorage.setItem('bookingState', JSON.stringify(bookingState));
+  }, [bookingState]);
 
   const handleNavigate = (step: Step) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -44,12 +69,17 @@ export const App: React.FC = () => {
       selectedTime: '7:00 PM',
       selectedSeats: ['C-6', 'C-7'],
       aadhaarNumber: '',
-      mobileNumber: '9876543210',
+      aadhaarFrontImage: null,
+      aadhaarBackImage: null,
+      email: '',
+      mobileNumber: '',
       otp: '',
       paymentMethod: 'upi',
       bookingId: `ASAM${Math.floor(100000000000 + Math.random() * 900000000000)}`,
       totalAmount: 210.00,
     });
+    localStorage.removeItem('bookingStep');
+    localStorage.removeItem('bookingState');
     handleNavigate('landing');
   };
 
@@ -94,17 +124,28 @@ export const App: React.FC = () => {
           <AadhaarVerifyView 
             aadhaarNumber={bookingState.aadhaarNumber}
             onSetAadhaar={(num) => setBookingState(prev => ({ ...prev, aadhaarNumber: num }))}
-            onSendOtp={() => handleNavigate('otp')}
+            onUploadImages={(front, back) => setBookingState(prev => ({ ...prev, aadhaarFrontImage: front, aadhaarBackImage: back }))}
+            onVerifySuccess={() => handleNavigate('contact')}
             onBack={() => handleNavigate('seats')}
+          />
+        );
+      case 'contact':
+        return (
+          <ContactDetailsView
+            email={bookingState.email}
+            mobileNumber={bookingState.mobileNumber}
+            onSetEmail={(email) => setBookingState(prev => ({ ...prev, email }))}
+            onSetMobile={(mobile) => setBookingState(prev => ({ ...prev, mobileNumber: mobile }))}
+            onNext={() => handleNavigate('otp')}
+            onBack={() => handleNavigate('aadhaar')}
           />
         );
       case 'otp':
         return (
           <OtpVerifyView 
             mobileNumber={bookingState.mobileNumber}
-            onSetMobile={(mob) => setBookingState(prev => ({ ...prev, mobileNumber: mob }))}
             onVerify={() => handleNavigate('payment')}
-            onChangeMobile={() => alert('Mobile number change option activated.')}
+            onChangeMobile={() => handleNavigate('contact')}
           />
         );
       case 'payment':

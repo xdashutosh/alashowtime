@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Check, Copy, Ticket, ShieldCheck, Download, Wallet, Home, ArrowRight, Calendar, Clock, MapPin, Award } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Check, Copy, Ticket, ShieldCheck, Download, Wallet, Home, ArrowRight, Calendar, Clock, MapPin, Award, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import jsPDF from 'jspdf';
+import { toPng } from 'html-to-image';
+import { QRCodeSVG } from 'qrcode.react';
 import type { BookingState } from '../types';
 
 interface ConfirmationViewProps {
@@ -18,6 +21,9 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
   onViewFinalDashboard,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const ticketRef = useRef<HTMLDivElement>(null);
+  
   const ticketCount = bookingState.selectedSeats.length || 2;
   const seatsStr = bookingState.selectedSeats.join(', ') || 'C-6, C-7';
 
@@ -55,8 +61,39 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
-    alert('Your E-Ticket PDF has been successfully generated and downloaded!');
+  const handleDownload = async () => {
+    if (!ticketRef.current) return;
+    setIsDownloading(true);
+    
+    try {
+      const dataUrl = await toPng(ticketRef.current, {
+        quality: 1.0,
+        pixelRatio: 2,
+        backgroundColor: '#0c0505',
+        filter: (node) => {
+          if (node instanceof HTMLElement && node.hasAttribute('data-html2image-ignore')) {
+            return false;
+          }
+          return true;
+        }
+      });
+      
+      const width = ticketRef.current.offsetWidth;
+      const height = ticketRef.current.offsetHeight;
+      const orientation = width > height ? 'l' : 'p';
+
+      const pdf = new jsPDF(orientation, 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (height * pdfWidth) / width;
+      
+      pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Assam_Ticket_${bookingState.bookingId}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF ticket. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleAddToWallet = () => {
@@ -103,7 +140,7 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
         </div>
 
         {/* Main Grid: Details Left, E-Ticket Right */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch">
+        <div ref={ticketRef} className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch bg-[#131622] p-2 rounded-2xl">
           {/* Ticket Details Box (7 cols) */}
           <div className="xl:col-span-7 bg-[#0b0e17] p-6 rounded-2xl border border-[#232938] shadow-inner flex flex-col justify-between space-y-6">
             <div className="flex items-center space-x-3 pb-3 border-b border-[#1c2230]">
@@ -153,7 +190,7 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
             <div className="bg-emerald-950/30 p-3.5 rounded-xl border border-emerald-500/30 flex items-center space-x-3 text-left">
               <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
               <p className="text-[11px] text-emerald-200 leading-snug">
-                A confirmation SMS & Email have been sent. Please show the QR code at the entry gate.
+                A confirmation SMS & Email have been sent to <strong>{bookingState.email || 'your registered email'}</strong>. Please show the QR code at the entry gate.
               </p>
             </div>
           </div>
@@ -170,11 +207,14 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
 
             {/* QR Code Container */}
             <div className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-[#d4af37]/60 relative group transform transition hover:scale-105">
-              <img 
-                src="/qr-code.png" 
-                alt="Ticket QR Code" 
-                className="w-36 h-36 object-contain"
-              />
+              <div className="w-36 h-36 flex items-center justify-center">
+                <QRCodeSVG 
+                  value={bookingState.bookingId} 
+                  size={144}
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  level="H"
+                />
+              </div>
             </div>
 
             <div className="space-y-0.5">
@@ -183,13 +223,18 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
             </div>
 
             {/* Buttons */}
-            <div className="w-full space-y-2 pt-2">
+            <div className="w-full space-y-2 pt-2" data-html2image-ignore>
               <button 
                 onClick={handleDownload}
-                className="w-full py-3 bg-[#d4af37]/15 border border-[#d4af37]/40 rounded-xl font-semibold text-xs text-[#e6ca65] hover:bg-[#d4af37]/25 transition flex items-center justify-center space-x-2 shadow-sm cursor-pointer"
+                disabled={isDownloading}
+                className="w-full py-3 bg-[#d4af37]/15 border border-[#d4af37]/40 rounded-xl font-semibold text-xs text-[#e6ca65] hover:bg-[#d4af37]/25 transition flex items-center justify-center space-x-2 shadow-sm cursor-pointer disabled:opacity-50"
               >
-                <Download className="w-4 h-4 text-[#d4af37]" />
-                <span>Download E-Ticket</span>
+                {isDownloading ? (
+                  <Loader2 className="w-4 h-4 text-[#d4af37] animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 text-[#d4af37]" />
+                )}
+                <span>{isDownloading ? 'Generating PDF...' : 'Download E-Ticket'}</span>
               </button>
 
               <button 

@@ -4,6 +4,7 @@ export type Step =
   | 'date' 
   | 'seats' 
   | 'aadhaar' 
+  | 'contact'
   | 'otp' 
   | 'payment' 
   | 'confirmation' 
@@ -22,9 +23,13 @@ export interface BookingState {
   selectedTime: string;
   selectedSeats: string[];
   aadhaarNumber: string;
+  aadhaarFrontImage: string | null;
+  aadhaarBackImage: string | null;
+  email: string;
   mobileNumber: string;
   otp: string;
   paymentMethod: 'upi' | 'card' | 'netbanking';
   bookingId: string;
   totalAmount: number;
 }
+

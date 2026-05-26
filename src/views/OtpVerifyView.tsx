@@ -4,21 +4,17 @@ import { motion } from 'framer-motion';
 
 interface OtpVerifyProps {
   mobileNumber: string;
-  onSetMobile: (mobile: string) => void;
   onVerify: () => void;
   onChangeMobile: () => void;
 }
 
 export const OtpVerifyView: React.FC<OtpVerifyProps> = ({
   mobileNumber,
-  onSetMobile,
   onVerify,
   onChangeMobile,
 }) => {
   const [otpValues, setOtpValues] = useState<string[]>(['', '', '', '', '', '']);
-  const [timeLeft, setTimeLeft] = useState(175); // 02:55 as in PDF
-  const [isEditingMobile, setIsEditingMobile] = useState(!mobileNumber);
-  const [tempMobile, setTempMobile] = useState(mobileNumber || '');
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes expiry
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -52,22 +48,8 @@ export const OtpVerifyView: React.FC<OtpVerifyProps> = ({
     }
   };
 
-  const handleMobileSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (tempMobile.length < 10) {
-      alert('Please enter a valid mobile number');
-      return;
-    }
-    onSetMobile(tempMobile);
-    setIsEditingMobile(false);
-  };
-
   const handleVerifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEditingMobile) {
-      alert('Please save your mobile number first.');
-      return;
-    }
     const fullOtp = otpValues.join('');
     if (fullOtp.length !== 6) {
       alert('Please enter the 6-digit OTP.');
@@ -77,7 +59,7 @@ export const OtpVerifyView: React.FC<OtpVerifyProps> = ({
   };
 
   const handleResend = () => {
-    setTimeLeft(175);
+    setTimeLeft(120);
     setOtpValues(['', '', '', '', '', '']);
     alert('A new OTP has been sent to your mobile number.');
     inputRefs.current[0]?.focus();
@@ -106,116 +88,88 @@ export const OtpVerifyView: React.FC<OtpVerifyProps> = ({
           <div className="w-24 h-1 bg-gradient-to-r from-[#e6ca65] to-[#9c7a38] mx-auto rounded-full" />
         </div>
 
-        {/* Mobile Number Display / Edit */}
-        {isEditingMobile ? (
-          <form onSubmit={handleMobileSubmit} className="space-y-4 bg-black/60 p-5 rounded-xl border border-[#c5a059]/30">
-            <label className="text-xs uppercase text-[#d4af37] font-semibold tracking-wider block">
-              Enter Registered Mobile Number
-            </label>
-            <div className="flex space-x-2">
-              <span className="bg-[#0b0e17] border border-[#c5a059]/40 rounded-lg px-4 py-3 text-[#e6ca65] font-mono font-bold flex items-center">
-                +91
-              </span>
-              <input
-                type="tel"
-                placeholder="98765 43210"
-                value={tempMobile}
-                onChange={(e) => setTempMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="flex-1 bg-[#0b0e17] border border-[#c5a059]/40 rounded-lg px-4 py-3 font-mono text-lg text-[#e6ca65] placeholder-gray-600 focus:outline-none focus:border-[#d4af37]"
-                autoFocus
-              />
-              <button
-                type="submit"
-                className="px-6 bg-[#d4af37] text-black font-bold text-sm rounded-lg hover:bg-[#e6ca65] transition uppercase tracking-wider cursor-pointer"
-              >
-                Send
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className="text-center space-y-2">
-            <p className="text-sm text-[#cbd5e1]">
-              An OTP has been sent to your mobile number
-            </p>
-            <div className="flex items-center justify-center space-x-3">
-              <span className="font-mono text-lg font-bold text-[#e6ca65] tracking-wider">
-                +91 {mobileNumber.slice(0, 2)}XXX XX{mobileNumber.slice(-3)}
-              </span>
-              <button 
-                onClick={() => setIsEditingMobile(true)}
-                className="p-1.5 bg-[#d4af37]/20 text-[#d4af37] rounded-md hover:bg-[#d4af37] hover:text-black transition cursor-pointer"
-                title="Edit Mobile Number"
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <p className="text-xs text-gray-400 pt-2 font-medium">Enter the 6-digit OTP below</p>
+        <div className="text-center space-y-2 relative z-10">
+          <p className="text-sm text-[#cbd5e1]">
+            An OTP has been sent to your mobile number
+          </p>
+          <div className="flex items-center justify-center space-x-3">
+            <span className="font-mono text-lg font-bold text-[#e6ca65] tracking-wider">
+              +91 {mobileNumber ? `${mobileNumber.slice(0, 2)}XXXXXX${mobileNumber.slice(-2)}` : 'XXXXXX'}
+            </span>
+            <button 
+              onClick={onChangeMobile}
+              className="p-1.5 bg-[#d4af37]/20 text-[#d4af37] rounded-md hover:bg-[#d4af37] hover:text-black transition cursor-pointer"
+              title="Edit Contact Details"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+            </button>
           </div>
-        )}
+          <p className="text-xs text-gray-400 pt-2 font-medium">Enter the 6-digit OTP below</p>
+        </div>
 
         {/* OTP Input Boxes */}
-        {!isEditingMobile && (
-          <form onSubmit={handleVerifySubmit} className="space-y-8">
-            <div className="grid grid-cols-6 gap-3 max-w-sm mx-auto">
-              {otpValues.map((v, i) => (
-                <input
-                  key={i}
-                  ref={(el) => { inputRefs.current[i] = el; }}
-                  type="text"
-                  maxLength={1}
-                  value={v}
-                  onChange={(e) => handleOtpChange(i, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(i, e)}
-                  className="w-full aspect-square bg-[#0b0e17] border-2 border-[#c5a059]/40 rounded-xl text-center font-mono text-2xl font-black text-[#e6ca65] focus:outline-none focus:border-[#d4af37] focus:ring-4 focus:ring-[#d4af37]/20 transition shadow-inner"
-                />
-              ))}
-            </div>
+        <form onSubmit={handleVerifySubmit} className="space-y-8 relative z-10">
+          <div className="grid grid-cols-6 gap-3 max-w-sm mx-auto">
+            {otpValues.map((v, i) => (
+              <input
+                key={i}
+                ref={(el) => { inputRefs.current[i] = el; }}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={1}
+                value={v}
+                onChange={(e) => handleOtpChange(i, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(i, e)}
+                className="w-full aspect-square bg-[#0b0e17] border-2 border-[#c5a059]/40 rounded-xl text-center font-mono text-2xl font-black text-[#e6ca65] focus:outline-none focus:border-[#d4af37] focus:ring-4 focus:ring-[#d4af37]/20 transition shadow-inner"
+              />
+            ))}
+          </div>
 
-            {/* Timer & Resend */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold px-2 text-center">
-              <div className="flex items-center space-x-1.5 text-[#d4af37]">
-                <Clock className="w-4 h-4 shrink-0" />
-                <span>OTP will expire in {formatTime(timeLeft)}</span>
-              </div>
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={timeLeft > 150}
-                className="text-[#d4af37] hover:text-[#e6ca65] hover:underline disabled:opacity-40 disabled:hover:no-underline transition flex items-center space-x-1 cursor-pointer"
-              >
-                <RefreshCw className="w-3 h-3 shrink-0" />
-                <span>Didn't receive OTP? Resend OTP</span>
-              </button>
+          {/* Timer & Resend */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-semibold px-2 text-center">
+            <div className="flex items-center space-x-1.5 text-[#d4af37]">
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>OTP will expire in {formatTime(timeLeft)}</span>
             </div>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={timeLeft > 0}
+              className="text-[#d4af37] hover:text-[#e6ca65] hover:underline disabled:opacity-40 disabled:hover:no-underline transition flex items-center space-x-1 cursor-pointer"
+            >
+              <RefreshCw className="w-3 h-3 shrink-0" />
+              <span>Didn't receive OTP? Resend</span>
+            </button>
+          </div>
 
-            {/* Security message */}
-            <div className="bg-[#181d2c]/80 p-4 rounded-xl border border-[#2b3347] flex items-start space-x-3 text-left">
-              <Lock className="w-5 h-5 text-[#d4af37] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs font-semibold text-[#cbd5e1]">Your data is secure and encrypted</p>
-                <p className="text-[11px] text-gray-400 mt-0.5">We do not share your mobile or Aadhaar information with anyone.</p>
-              </div>
+          {/* Security message */}
+          <div className="bg-[#181d2c]/80 p-4 rounded-xl border border-[#2b3347] flex items-start space-x-3 text-left">
+            <Lock className="w-5 h-5 text-[#d4af37] shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-semibold text-[#cbd5e1]">Your data is secure and encrypted</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">We do not share your contact or Aadhaar information with anyone.</p>
             </div>
+          </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
-              <button 
-                type="button"
-                onClick={onChangeMobile}
-                className="w-full sm:w-1/2 py-4 rounded-xl border border-[#c5a059]/40 text-[#d4af37] font-semibold hover:bg-[#d4af37]/10 transition tracking-wider text-xs uppercase cursor-pointer"
-              >
-                CHANGE MOBILE NUMBER
-              </button>
-              <button 
-                type="submit"
-                className="w-full sm:w-1/2 py-4 rounded-xl bg-gradient-to-r from-[#e6ca65] via-[#d4af37] to-[#b38f44] text-black font-cinzel font-bold text-sm tracking-widest uppercase shadow-xl hover:opacity-95 shadow-[#d4af37]/20 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer font-bold"
-              >
-                <span>VERIFY & PROCEED</span>
-                <ChevronRight className="w-4 h-4 text-black shrink-0" />
-              </button>
-            </div>
-          </form>
-        )}
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+            <button 
+              type="button"
+              onClick={onChangeMobile}
+              className="w-full sm:w-1/2 py-4 rounded-xl border border-[#c5a059]/40 text-[#d4af37] font-semibold hover:bg-[#d4af37]/10 transition tracking-wider text-xs uppercase cursor-pointer"
+            >
+              CHANGE CONTACT INFO
+            </button>
+            <button 
+              type="submit"
+              className="w-full sm:w-1/2 py-4 rounded-xl bg-gradient-to-r from-[#e6ca65] via-[#d4af37] to-[#b38f44] text-black font-cinzel font-bold text-sm tracking-widest uppercase shadow-xl hover:opacity-95 shadow-[#d4af37]/20 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer font-bold"
+            >
+              <span>VERIFY & PROCEED</span>
+              <ChevronRight className="w-4 h-4 text-black shrink-0" />
+            </button>
+          </div>
+        </form>
       </motion.div>
     </div>
   );

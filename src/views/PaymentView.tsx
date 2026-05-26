@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Calendar, Clock, MapPin, Ticket, Info, Lock, ChevronLeft, CreditCard, Building, QrCode } from 'lucide-react';
+import { FileText, Calendar, Clock, MapPin, Ticket, Info, Lock, ChevronLeft, CreditCard, Building, QrCode, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { BookingState } from '../types';
 
@@ -19,10 +19,28 @@ export const PaymentView: React.FC<PaymentViewProps> = ({
   onViewSeats,
 }) => {
   const [timeLeft, setTimeLeft] = useState(295); // 04:55 as in PDF
+  const [showRazorpay, setShowRazorpay] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'processing' | 'success'>('processing');
+
   const ticketCount = bookingState.selectedSeats.length || 2;
   const ticketPriceTotal = ticketCount * 100;
   const bookingFee = 10;
   const grandTotal = ticketPriceTotal + bookingFee;
+
+  useEffect(() => {
+    if (showRazorpay) {
+      setPaymentStatus('processing');
+      const timer1 = setTimeout(() => setPaymentStatus('success'), 2000);
+      const timer2 = setTimeout(() => {
+        setShowRazorpay(false);
+        onPay();
+      }, 3500);
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    }
+  }, [showRazorpay, onPay]);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -258,13 +276,54 @@ export const PaymentView: React.FC<PaymentViewProps> = ({
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={onPay}
+            onClick={() => setShowRazorpay(true)}
             className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-r from-[#e6ca65] via-[#d4af37] to-[#b38f44] text-black font-cinzel font-bold text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:opacity-95 transition duration-300 flex items-center justify-center space-x-3 cursor-pointer"
           >
             <Lock className="w-5 h-5 text-black shrink-0" />
             <span>PAY ₹ {grandTotal.toFixed(2)}</span>
           </motion.button>
         </div>
+
+        {/* Razorpay Simulation Modal */}
+        {showRazorpay && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col"
+            >
+              {/* Header */}
+              <div className="bg-[#3399cc] p-4 flex items-center justify-between text-white">
+                <div className="flex flex-col">
+                  <span className="font-bold text-lg">Razorpay</span>
+                  <span className="text-xs opacity-90">Test Environment</span>
+                </div>
+                <div className="text-right">
+                  <span className="block text-xl font-bold">₹{grandTotal.toFixed(2)}</span>
+                </div>
+              </div>
+              
+              {/* Body */}
+              <div className="p-6 flex flex-col items-center justify-center space-y-6 min-h-[250px]">
+                {paymentStatus === 'processing' ? (
+                  <>
+                    <div className="w-12 h-12 border-4 border-gray-200 border-t-[#3399cc] rounded-full animate-spin" />
+                    <p className="text-gray-600 font-medium">Processing Payment...</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                      <CheckCircle2 className="w-10 h-10 text-green-600" />
+                    </div>
+                    <p className="text-green-600 font-bold text-lg">Payment Successful</p>
+                    <p className="text-xs text-gray-500 text-center">Redirecting you back to merchant...</p>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+
       </motion.div>
     </div>
   );
